@@ -1,6 +1,6 @@
 # Instituto Tecnológico de Costa Rica
 
-## Proyecto #2 - Evaluación De Expresiones Matemáticas
+## Proyecto 2 - Evaluación De Expresiones Matemáticas
 
 ### Algoritmos y Estructuras de Datos I
 
