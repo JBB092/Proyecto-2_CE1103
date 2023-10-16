@@ -10,7 +10,7 @@ package DataStructures;
  * @author José Barquero
  */
 public class Deque<T> { //"Double-Ended Queue"
-    private DoublyLinkedList<T> doublyLinkedList;
+    DoublyLinkedList<T> doublyLinkedList;
 
     /**
      * Constructs an empty deque.

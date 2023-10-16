@@ -9,9 +9,9 @@ package DataStructures;
  * @author José Barquero
  */
 public class DoublyLinkedList<T> {
-    private Node<T> head;
-    private Node<T> last;
-    private Node<T> current;
+    public Node<T> head;
+    public Node<T> last;
+    public Node<T> current;
 
     /**
      * Constructs an empty doubly linked list.
