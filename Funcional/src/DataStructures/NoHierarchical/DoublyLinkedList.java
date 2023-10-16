@@ -131,4 +131,39 @@ public class DoublyLinkedList<T> {
         }
         return count;
     }
+
+    /**
+     * Returns the data of the last node in the doubly linked list.
+     *
+     * @return The data of the last node, or null if the list is empty.
+     */
+    public T getLast() {
+        if (last == null) {
+            return null;
+        }
+        return last.getData();
+    }
+
+    /**
+     * Removes and returns the data from the end of the doubly linked list.
+     *
+     * @return The data from the end of the list.
+     * @throws RuntimeException if the list is empty.
+     */
+    public T removeLast() {
+        if (isEmpty()) {
+            throw new RuntimeException("The list is empty.");
+        }
+
+        T data = last.getData();
+        last = last.getPrev();
+
+        if (last != null) {
+            last.setNext(null);
+        } else {
+            head = null;
+        }
+
+        return data;
+    }
 }
