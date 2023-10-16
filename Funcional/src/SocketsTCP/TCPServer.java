@@ -19,40 +19,21 @@ public class TCPServer {
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                // Leer los operandos y el operador del cliente
-                double operand1 = Double.parseDouble(in.readLine());
-                String operator = in.readLine();
-                double operand2 = Double.parseDouble(in.readLine());
+                // Leer operaciones hasta que el cliente termine la conexión
+                String expression;
+                while ((expression = in.readLine()) != null) {
+                    // Normalizar la expresión (agregar espacios alrededor de operadores)
+                    String normalizedExpression = normalizeExpression(expression);
 
-                // Realizar la operación
-                double result;
-                switch (operator) {
-                    case "+":
-                        result = operand1 + operand2;
-                        break;
-                    case "-":
-                        result = operand1 - operand2;
-                        break;
-                    case "*":
-                        result = operand1 * operand2;
-                        break;
-                    case "/":
-                        if (operand2 == 0) {
-                            out.println("Operación inválida: División por cero.");
-                            clientSocket.close();
-                            continue;
-                        }
-                        result = operand1 / operand2;
-                        break;
-                    default:
-                        out.println("Operación inválida: Operador no reconocido.");
-                        clientSocket.close();
-                        continue;
+                    // Parsear la expresión y realizar la operación
+                    double result;
+                    try {
+                        result = evaluateExpression(normalizedExpression);
+                        out.println("Resultado para la expresión '" + expression + "': " + result);
+                    } catch (ArithmeticException | IllegalArgumentException e) {
+                        out.println("Operación inválida para la expresión '" + expression + "': " + e.getMessage());
+                    }
                 }
-
-                // Enviar la operación y el resultado al cliente
-                out.println("Operación: " + operand1 + " " + operator + " " + operand2);
-                out.println("Resultado: " + result);
 
                 // Cerrar la conexión con el cliente
                 clientSocket.close();
@@ -68,5 +49,46 @@ public class TCPServer {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static String normalizeExpression(String expression) {
+        // Agregar espacios alrededor de operadores para que la expresión esté bien formada
+        return expression.replaceAll("(?<=\\d)(?=[+\\-*/])|(?<=[+\\-*/])(?=\\d)", " ");
+    }
+
+    private static double evaluateExpression(String expression) {
+        // Separar la expresión en operandos y operadores
+        String[] tokens = expression.split("\\s+");
+        if (tokens.length % 2 == 0) {
+            throw new IllegalArgumentException("Expresión mal formada: Número incorrecto de operandos y operadores.");
+        }
+
+        double result = Double.parseDouble(tokens[0]);
+        for (int i = 1; i < tokens.length; i += 2) {
+            String operator = tokens[i];
+            double operand = Double.parseDouble(tokens[i + 1]);
+
+            switch (operator) {
+                case "+":
+                    result += operand;
+                    break;
+                case "-":
+                    result -= operand;
+                    break;
+                case "*":
+                    result *= operand;
+                    break;
+                case "/":
+                    if (operand == 0) {
+                        throw new ArithmeticException("División por cero.");
+                    }
+                    result /= operand;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Operador no reconocido: " + operator);
+            }
+        }
+
+        return result;
     }
 }

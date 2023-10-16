@@ -13,23 +13,20 @@ public class TCPClient {
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-            System.out.print("Ingresa el primer operando: ");
-            double operand1 = Double.parseDouble(userInput.readLine());
+            while (true) {
+                System.out.print("Ingresa la expresión matemática (o 'exit' para salir): ");
+                String expression = userInput.readLine();
 
-            System.out.print("Ingresa el operador (+, -, *, /): ");
-            String operator = userInput.readLine();
+                // Enviar la expresión al servidor
+                out.println(expression);
 
-            System.out.print("Ingresa el segundo operando: ");
-            double operand2 = Double.parseDouble(userInput.readLine());
+                // Si el cliente desea salir, cerramos la conexión
+                if (expression.equalsIgnoreCase("exit")) {
+                    break;
+                }
 
-            // Enviar los operandos y el operador al servidor
-            out.println(operand1);
-            out.println(operator);
-            out.println(operand2);
-
-            // Leer la respuesta del servidor
-            String response;
-            while ((response = in.readLine()) != null) {
+                // Leer y mostrar la respuesta del servidor
+                String response = in.readLine();
                 System.out.println("Respuesta del servidor: " + response);
             }
 

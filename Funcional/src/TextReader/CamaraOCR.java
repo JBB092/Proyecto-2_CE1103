@@ -23,7 +23,7 @@ public class CamaraOCR {
      */
     public static void main(String[] args) {
 
-        System.load("C:\\Windows\\SysWOW64\\opencv_java480.dll"); //******** */
+        //System.load("C:\\Windows\\System32\\opencv_java480.dll"); //******** */
         
         // Load the native OpenCV libraries
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
