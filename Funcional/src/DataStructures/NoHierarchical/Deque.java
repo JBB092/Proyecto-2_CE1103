@@ -1,22 +1,21 @@
 package DataStructures.NoHierarchical;
 
 /**
- * Represents a double-ended queue (Deque) implemented using a doubly linked list.
+ * Represents a double-ended queue (deque) implemented using a doubly linked list.
  *
- * This class provides functionality to work with a double-ended queue, allowing insertion and removal
- * of elements from both the front and rear of the queue.
+ * This class provides functionality to work with a deque, including adding to the front,
+ * removing from the front, peeking at the front, checking for emptiness, and getting the size.
  *
- * @param <T> The type of data to be stored in the deque.
  * @author José Barquero
  */
-public class Deque<T> { //"Double-Ended Queue"
-    DoublyLinkedList<T> doublyLinkedList;
+public class Deque {
+    private DoublyLinkedList doublyLinkedList;
 
     /**
      * Constructs an empty deque.
      */
     public Deque() {
-        doublyLinkedList = new DoublyLinkedList<>();
+        doublyLinkedList = new DoublyLinkedList();
     }
 
     /**
@@ -24,36 +23,34 @@ public class Deque<T> { //"Double-Ended Queue"
      *
      * @param data The data to be added to the front of the deque.
      */
-    public void addFront(T data) {
-        doublyLinkedList.insertAtEnd(data);  // Insert at the end for a doubly linked list
+    public void addFront(String data) {
+        doublyLinkedList.insertAtFront(data);
     }
 
     /**
-     * Adds an element to the rear of the deque.
+     * Removes and returns the element from the front of the deque.
      *
-     * @param data The data to be added to the rear of the deque.
+     * @return The element removed from the front of the deque.
+     * @throws RuntimeException if the deque is empty.
      */
-    public void addRear(T data) {
-        doublyLinkedList.insertAtEnd(data);  // Insert at the end for a doubly linked list
-    }
-
-    /**
-     * Removes and returns the element at the front of the deque.
-     *
-     * @return The element at the front of the deque.
-     */
-    public T removeFront() {
+    public String removeFront() {
+        if (isEmpty()) {
+            throw new RuntimeException("The deque is empty.");
+        }
         return doublyLinkedList.removeFromFront();
     }
 
     /**
-     * Removes and returns the element at the rear of the deque.
+     * Retrieves the element at the front of the deque without removing it.
      *
-     * @return The element at the rear of the deque.
+     * @return The element at the front of the deque.
+     * @throws RuntimeException if the deque is empty.
      */
-    public T removeRear() {
-        // Assuming this is a valid operation for the deque
-        return doublyLinkedList.removeFromFront();  // Remove from the front for a doubly linked list
+    public String peek() {
+        if (isEmpty()) {
+            throw new RuntimeException("The deque is empty.");
+        }
+        return doublyLinkedList.head.getData();
     }
 
     /**
@@ -66,30 +63,9 @@ public class Deque<T> { //"Double-Ended Queue"
     }
 
     /**
-     * Displays the data of the current node.
-     */
-    public void displayCurrent() {
-        doublyLinkedList.displayCurrent();
-    }
-
-    /**
-     * Moves the current node forward.
-     */
-    public void moveCurrentForward() {
-        doublyLinkedList.moveCurrentForward();
-    }
-
-    /**
-     * Moves the current node backward.
-     */
-    public void moveCurrentBackward() {
-        doublyLinkedList.moveCurrentBackward();
-    }
-
-    /**
      * Returns the size of the deque.
      *
-     * @return The number of nodes in the deque.
+     * @return The number of elements in the deque.
      */
     public int size() {
         return doublyLinkedList.size();

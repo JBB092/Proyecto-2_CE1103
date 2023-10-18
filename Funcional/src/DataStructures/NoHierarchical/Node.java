@@ -3,21 +3,21 @@ package DataStructures.NoHierarchical;
 /**
  * Represents a node in a doubly linked list.
  *
- * @param <T> The type of data to be stored in the node.
+ * @param <String> The type of data to be stored in the node.
  * 
  * @author José Barquero
  */
-public class Node<T> {
-    public T data;
-    public Node<T> next;
-    public Node<T> prev;
+public class Node {
+    public String data;  // The data stored in the node.
+    public Node next;    // The reference to the next node.
+    public Node prev;    // The reference to the previous node.
 
     /**
      * Constructs a node with the given data and initializes next and prev nodes.
      *
      * @param data The data to be stored in the node.
      */
-    public Node(T data) {
+    public Node(String data) {
         this.data = data;
         this.next = null;
         this.prev = null;
@@ -28,7 +28,7 @@ public class Node<T> {
      *
      * @return The data stored in the node.
      */
-    public T getData() {
+    public String getData() {
         return this.data;
     }
 
@@ -37,7 +37,7 @@ public class Node<T> {
      *
      * @return The reference to the next node.
      */
-    public Node<T> getNext() {
+    public Node getNext() {
         return this.next;
     }
 
@@ -46,7 +46,7 @@ public class Node<T> {
      *
      * @return The reference to the previous node.
      */
-    public Node<T> getPrev() {
+    public Node getPrev() {
         return this.prev;
     }
 
@@ -55,7 +55,7 @@ public class Node<T> {
      *
      * @param nextNode The node to set as the next node.
      */
-    public void setNext(Node<T> nextNode) {
+    public void setNext(Node nextNode) {
         this.next = nextNode;
     }
 
@@ -64,7 +64,7 @@ public class Node<T> {
      *
      * @param prevNode The node to set as the previous node.
      */
-    public void setPrev(Node<T> prevNode) {
+    public void setPrev(Node prevNode) {
         this.prev = prevNode;
     }
 }

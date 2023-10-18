@@ -2,40 +2,62 @@ package SocketsTCP;
 
 import java.io.*;
 import java.net.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import DataStructures.NoHierarchical.StackTCP;
+
+/**
+ * Represents a TCP server that evaluates mathematical expressions received from clients.
+ *
+ * This server listens for incoming client connections and handles evaluation of mathematical expressions.
+ *
+ * @author José Barquero
+ */
 public class TCPServer {
+    /**
+     * The main method to start the TCP server.
+     *
+     * @param args The command-line arguments (not used in this application).
+     */
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
             serverSocket = new ServerSocket(12345);
-            System.out.println("Servidor escuchando en el puerto 12345...");
+            System.out.println("Server listening on port 12345...");
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Cliente conectado desde: " + clientSocket.getInetAddress());
+                System.out.println("Client connected from: " + clientSocket.getInetAddress());
 
-                // Configurar los streams de entrada y salida
+                // Set up input and output streams
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                // Leer operaciones hasta que el cliente termine la conexión
+                // Read operations until the client terminates the connection
                 String expression;
                 while ((expression = in.readLine()) != null) {
-                    // Normalizar la expresión (agregar espacios alrededor de operadores)
+                    // Normalize the expression (add spaces around operators)
                     String normalizedExpression = normalizeExpression(expression);
 
-                    // Parsear la expresión y realizar la operación
+                    // Parse the expression and perform the operation
                     double result;
                     try {
                         result = evaluateExpression(normalizedExpression);
-                        out.println("Resultado para la expresión '" + expression + "': " + result);
+
+                        // Get the current date
+                        String currentDate = dateFormat.format(new Date());
+
+                        // Send the operation, result, and date to the client
+                        out.println(expression + "," + result + "," + currentDate);
                     } catch (ArithmeticException | IllegalArgumentException e) {
-                        out.println("Operación inválida para la expresión '" + expression + "': " + e.getMessage());
+                        out.println("Invalid operation for expression '" + expression + "': " + e.getMessage());
                     }
                 }
 
-                // Cerrar la conexión con el cliente
+                // Close the connection with the client
                 clientSocket.close();
             }
         } catch (IOException e) {
@@ -51,44 +73,98 @@ public class TCPServer {
         }
     }
 
+    /**
+     * Normalizes the expression by adding spaces around operators.
+     *
+     * @param expression The input expression to normalize.
+     * @return The normalized expression with spaces around operators.
+     */
     private static String normalizeExpression(String expression) {
-        // Agregar espacios alrededor de operadores para que la expresión esté bien formada
-        return expression.replaceAll("(?<=\\d)(?=[+\\-*/])|(?<=[+\\-*/])(?=\\d)", " ");
+        return expression.replaceAll("(?<=\\d)(?=[+\\-*/()])|(?<=[+\\-*/()])(?=\\d)", " ");
     }
 
+    /**
+     * Evaluates the given expression and returns the result.
+     *
+     * @param expression The expression to evaluate.
+     * @return The result of the evaluated expression.
+     */
     private static double evaluateExpression(String expression) {
-        // Separar la expresión en operandos y operadores
+        // Split the expression into operands and operators
         String[] tokens = expression.split("\\s+");
-        if (tokens.length % 2 == 0) {
-            throw new IllegalArgumentException("Expresión mal formada: Número incorrecto de operandos y operadores.");
-        }
+        StackTCP operandStack = new StackTCP();
+        StackTCP operatorStack = new StackTCP();
 
-        double result = Double.parseDouble(tokens[0]);
-        for (int i = 1; i < tokens.length; i += 2) {
-            String operator = tokens[i];
-            double operand = Double.parseDouble(tokens[i + 1]);
-
-            switch (operator) {
-                case "+":
-                    result += operand;
-                    break;
-                case "-":
-                    result -= operand;
-                    break;
-                case "*":
-                    result *= operand;
-                    break;
-                case "/":
-                    if (operand == 0) {
-                        throw new ArithmeticException("División por cero.");
-                    }
-                    result /= operand;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Operador no reconocido: " + operator);
+        for (String token : tokens) {
+            if (token.matches("[0-9]+(\\.[0-9]+)?")) {
+                operandStack.push(token);
+            } else if (token.equals(")")) {
+                while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(")) {
+                    performOperation(operandStack, operatorStack);
+                }
+                operatorStack.pop(); // Remove the '('
+            } else if (token.matches("[+\\-*/]")) {
+                while (!operatorStack.isEmpty() && hasHigherOrEqualPrecedence(operatorStack.peek(), token)) {
+                    performOperation(operandStack, operatorStack);
+                }
+                operatorStack.push(token);
             }
         }
 
-        return result;
+        while (!operatorStack.isEmpty()) {
+            performOperation(operandStack, operatorStack);
+        }
+
+        return Double.parseDouble(operandStack.pop());
+    }
+
+    /**
+     * Checks if one operator has higher or equal precedence than another.
+     *
+     * @param op1 The first operator.
+     * @param op2 The second operator.
+     * @return True if op1 has higher or equal precedence, false otherwise.
+     */
+    private static boolean hasHigherOrEqualPrecedence(String op1, String op2) {
+        if ((op1.equals("*") || op1.equals("/")) && (op2.equals("+") || op2.equals("-"))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Performs an operation using operands and operators from the stacks.
+     *
+     * @param operandStack The stack containing operands.
+     * @param operatorStack The stack containing operators.
+     */
+    private static void performOperation(StackTCP operandStack, StackTCP operatorStack) {
+        if (operandStack.isEmpty() || operatorStack.isEmpty()) {
+            throw new RuntimeException("Insufficient operands or operators for the operation.");
+        }
+
+        double operand2 = Double.parseDouble(operandStack.pop());
+        double operand1 = Double.parseDouble(operandStack.pop());
+        String operator = operatorStack.pop();
+
+        switch (operator) {
+            case "+":
+                operandStack.push((operand1 + operand2) + "");
+                break;
+            case "-":
+                operandStack.push((operand1 - operand2) + "");
+                break;
+            case "*":
+                operandStack.push((operand1 * operand2) + "");
+                break;
+            case "/":
+                if (operand2 == 0) {
+                    throw new ArithmeticException("Division by zero.");
+                }
+                operandStack.push((operand1 / operand2) + "");
+                break;
+            default:
+                throw new IllegalArgumentException("Unrecognized operator: " + operator);
+        }
     }
 }

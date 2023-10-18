@@ -1,24 +1,21 @@
 package DataStructures.NoHierarchical;
 
-import java.util.LinkedList;
-
 /**
- * Represents a stack implemented using a linked list.
+ * Represents a stack for TCP operations implemented using a deque.
  *
  * This class provides functionality to work with a stack, including push, pop, peek,
  * checking for emptiness, and getting the size.
  *
- * @param <T> The type of data to be stored in the stack.
  * @author José Barquero
  */
-public class Stack<T> {
-    private LinkedList<T> stack;
+public class StackTCP {
+    private Deque deque;
 
     /**
-     * Constructs an empty stack.
+     * Constructs an empty stack for TCP operations.
      */
-    public Stack() {
-        stack = new LinkedList<>();
+    public StackTCP() {
+        deque = new Deque();
     }
 
     /**
@@ -26,8 +23,8 @@ public class Stack<T> {
      *
      * @param data The data to be pushed onto the stack.
      */
-    public void push(T data) {
-        stack.addFirst(data);
+    public void push(String data) {
+        deque.addFront(data);
     }
 
     /**
@@ -36,11 +33,11 @@ public class Stack<T> {
      * @return The element popped from the stack.
      * @throws RuntimeException if the stack is empty.
      */
-    public T pop() {
+    public String pop() {
         if (isEmpty()) {
             throw new RuntimeException("The stack is empty.");
         }
-        return stack.removeFirst();
+        return deque.removeFront();
     }
 
     /**
@@ -49,11 +46,11 @@ public class Stack<T> {
      * @return The element at the top of the stack.
      * @throws RuntimeException if the stack is empty.
      */
-    public T peek() {
+    public String peek() {
         if (isEmpty()) {
             throw new RuntimeException("The stack is empty.");
         }
-        return stack.getFirst();
+        return deque.peek();
     }
 
     /**
@@ -62,7 +59,7 @@ public class Stack<T> {
      * @return True if the stack is empty, false otherwise.
      */
     public boolean isEmpty() {
-        return stack.isEmpty();
+        return deque.isEmpty();
     }
 
     /**
@@ -71,6 +68,6 @@ public class Stack<T> {
      * @return The number of elements in the stack.
      */
     public int size() {
-        return stack.size();
+        return deque.size();
     }
 }
