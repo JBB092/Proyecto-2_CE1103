@@ -2,7 +2,7 @@
 
 ## Proyecto 2 - Evaluación De Expresiones Matemáticas
 
-### Algoritmos y Estructuras de Datos I
+### Algoritmos y Estructuras de Datos I (CE1103)
 
 #### Estudiantes
 
@@ -24,4 +24,4 @@ cualquier longitud.
 
 - Implementar la arquitectura cliente/servidor utilizando sockets TCP.
 - Implementar árboles de expresión binarios.
-- Almacer y leer información de archivos con elementos separados por comas (csv).
+- Almacenar y leer información de archivos con elementos separados por comas (csv).
