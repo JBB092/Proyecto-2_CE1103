@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "InfixToPostfixAndEval",
+            "request": "launch",
+            "mainClass": "DataStructures.Hierarchical.InfixToPostfixAndEval",
+            "projectName": "Funcional_4d9e17bf"
+        },
+        {
+            "type": "java",
             "name": "InfixToPostfix",
             "request": "launch",
             "mainClass": "DataStructures.Hierarchical.InfixToPostfix",
