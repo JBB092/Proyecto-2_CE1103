@@ -5,13 +5,13 @@ package DataStructures.NoHierarchical;
  *
  * This class provides functionality to work with a doubly linked list, including insertion, traversal, and removal operations.
  *
- * @param <T> The type of data to be stored in the list.
+ * @param <String> The type of data to be stored in the list (unused).
  * @author José Barquero
  */
-public class DoublyLinkedList<T> {
-    public Node<T> head;
-    public Node<T> last;
-    public Node<T> current;
+public class DoublyLinkedList {
+    public Node head; //The head node of the doubly linked list.
+    public Node last; //The last node of the doubly linked list.
+    public Node current; //The current node for tranversal.
 
     /**
      * Constructs an empty doubly linked list.
@@ -36,15 +36,15 @@ public class DoublyLinkedList<T> {
      *
      * @param data The data to be inserted.
      */
-    public void insertAtEnd(T data) {
-        Node<T> newNode = new Node<>(data);
+    public void insertAtEnd(String data) {
+        Node newNode = new Node(data);
 
         if (isEmpty()) {
             this.head = newNode;
             this.last = newNode;
             this.current = this.head;
         } else {
-            Node<T> lastNode = this.last;
+            Node lastNode = this.last;
             lastNode.setNext(newNode);
             newNode.setPrev(lastNode);
             this.last = newNode;
@@ -94,18 +94,12 @@ public class DoublyLinkedList<T> {
      * @return The data from the front of the list.
      * @throws RuntimeException if the list is empty.
      */
-    /**
-     * Removes and returns the data from the front of the doubly linked list.
-     *
-     * @return The data from the front of the list.
-     * @throws RuntimeException if the list is empty.
-     */
-    public T removeFromFront() {
+    public String removeFromFront() {
         if (isEmpty()) {
             throw new RuntimeException("The list is empty.");
         }
 
-        T data = head.getData();
+        String data = head.getData();
         head = head.getNext();
 
         if (head != null) {
@@ -124,7 +118,7 @@ public class DoublyLinkedList<T> {
      */
     public int size() {
         int count = 0;
-        Node<T> current = head;
+        Node current = head;
         while (current != null) {
             count++;
             current = current.getNext();
@@ -137,7 +131,7 @@ public class DoublyLinkedList<T> {
      *
      * @return The data of the last node, or null if the list is empty.
      */
-    public T getLast() {
+    public String getLast() {
         if (last == null) {
             return null;
         }
@@ -150,12 +144,12 @@ public class DoublyLinkedList<T> {
      * @return The data from the end of the list.
      * @throws RuntimeException if the list is empty.
      */
-    public T removeLast() {
+    public String removeLast() {
         if (isEmpty()) {
             throw new RuntimeException("The list is empty.");
         }
 
-        T data = last.getData();
+        String data = last.getData();
         last = last.getPrev();
 
         if (last != null) {
@@ -165,5 +159,24 @@ public class DoublyLinkedList<T> {
         }
 
         return data;
+    }
+
+    /**
+     * Inserts a new node with the given data at the front of the doubly linked list.
+     *
+     * @param data The data to be inserted.
+     */
+    public void insertAtFront(String data) {
+        Node newNode = new Node(data);
+
+        if (isEmpty()) {
+            this.head = newNode;
+            this.last = newNode;
+            this.current = this.head;
+        } else {
+            newNode.setNext(head);
+            head.setPrev(newNode);
+            this.head = newNode;
+        }
     }
 }
