@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "InfixToPostfix",
+            "request": "launch",
+            "mainClass": "DataStructures.Hierarchical.InfixToPostfix",
+            "projectName": "Funcional_4d9e17bf"
+        },
+        {
+            "type": "java",
+            "name": "Infixtopostfix",
+            "request": "launch",
+            "mainClass": "DataStructures.Hierarchical.Infixtopostfix",
+            "projectName": "Funcional_4d9e17bf"
+        },
+        {
+            "type": "java",
+            "name": "infixtopostfix",
+            "request": "launch",
+            "mainClass": "DataStructures.Hierarchical.infixtopostfix",
+            "projectName": "Funcional_4d9e17bf"
+        },
+        {
+            "type": "java",
             "name": "BinaryExpressionTreeTest",
             "request": "launch",
             "mainClass": "DataStructures.Hierarchical.BinaryExpressionTreeTest",
