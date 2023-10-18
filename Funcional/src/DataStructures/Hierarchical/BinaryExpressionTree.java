@@ -1,17 +1,31 @@
 package DataStructures.Hierarchical;
 
 import DataStructures.NoHierarchical.Stack;
-import DataStructures.NoHierarchical.Queue;
 
+/**
+ * Represents a Binary Expression Tree that can be used to evaluate expressions in postfix notation.
+ *
+ * This tree is constructed from a postfix expression and provides the ability to evaluate the expression.
+ *
+ * @author José Barquero
+ */
 public class BinaryExpressionTree {
     private BinaryTreeNode root;
 
+    /**
+     * Constructs an empty Binary Expression Tree.
+     */
     public BinaryExpressionTree() {
         this.root = null;
     }
 
+    /**
+     * Builds a Binary Expression Tree from a postfix expression.
+     *
+     * @param postfixExpression The postfix expression to build the tree from.
+     */
     public void buildTreeFromPostfix(String postfixExpression) {
-        Stack stack = new Stack();
+        Stack<BinaryTreeNode> stack = new Stack<>();
 
         for (char c : postfixExpression.toCharArray()) {
             String token = String.valueOf(c);
@@ -34,10 +48,21 @@ public class BinaryExpressionTree {
         this.root = stack.pop();
     }
 
+    /**
+     * Evaluates the expression stored in the Binary Expression Tree.
+     *
+     * @return The result of the expression evaluation.
+     */
     public int evaluate() {
         return evaluate(root);
     }
 
+    /**
+     * Recursively evaluates the expression starting from the given node.
+     *
+     * @param node The node from which to start the evaluation.
+     * @return The result of the evaluation.
+     */
     private int evaluate(BinaryTreeNode node) {
         if (node == null) {
             return 0;
@@ -67,10 +92,22 @@ public class BinaryExpressionTree {
         }
     }
 
+    /**
+     * Checks if a given token is an operand.
+     *
+     * @param token The token to check.
+     * @return True if the token is an operand, false otherwise.
+     */
     private boolean isOperand(String token) {
         return token.matches("\\d+");
     }
 
+    /**
+     * Checks if a given token is an operator.
+     *
+     * @param token The token to check.
+     * @return True if the token is an operator, false otherwise.
+     */
     private boolean isOperator(String token) {
         return token.matches("[+\\-*/]");
     }
