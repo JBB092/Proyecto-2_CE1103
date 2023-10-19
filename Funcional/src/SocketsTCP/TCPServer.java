@@ -1,9 +1,12 @@
 package SocketsTCP;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
+import javax.swing.table.DefaultTableModel;
 
 import DataStructures.Hierarchical.BinaryExpressionTree;
 import DataStructures.Hierarchical.InfixToPostfixAndEval;
@@ -56,6 +59,12 @@ public class TCPServer {
         private Socket clientSocket;
         private SimpleDateFormat dateFormat;
 
+        /**
+         * Constructs a ClientHandler.
+         *
+         * @param clientSocket The client's socket.
+         * @param dateFormat The date format for timestamping.
+         */
         public ClientHandler(Socket clientSocket, SimpleDateFormat dateFormat) {
             this.clientSocket = clientSocket;
             this.dateFormat = dateFormat;
@@ -67,24 +76,29 @@ public class TCPServer {
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                String expression;
-                while ((expression = in.readLine()) != null) {
-                    // Normalize the expression (add spaces around operators)
-                    String normalizedExpression = normalizeExpression(expression);
+                String request;
+                while ((request = in.readLine()) != null) {
+                    if (request.equalsIgnoreCase("Historial") || request.equalsIgnoreCase("historial")){
+                        sendHistorialData(out);
+                    }
+                    else{
+                        // Normalize the expression (add spaces around operators)
+                        String normalizedExpression = normalizeExpression(request);
 
-                    // Parse the expression and perform the operation using InfixToPostfixAndEval
-                    int result;
-                    try {
-                        result = evaluateExpression(normalizedExpression);
-                        String currentDate = dateFormat.format(new Date());
+                        // Parse the expression and perform the operation using InfixToPostfixAndEval
+                        int result;
+                        try {
+                            result = evaluateExpression(normalizedExpression);
+                            String currentDate = dateFormat.format(new Date());
 
-                        // Send the operation, result, and date to the client
-                        out.println(expression + "," + result + "," + currentDate);
+                            // Send the operation, result, and date to the client
+                            out.println(request + "," + result + "," + currentDate);
 
-                        // Append the data to the CSV file
-                        appendToCSVFile(expression, result, currentDate);
-                    } catch (ArithmeticException | IllegalArgumentException e) {
-                        out.println("Invalid operation for expression '" + expression + "': " + e.getMessage());
+                            // Append the data to the CSV file
+                            appendToCSVFile(request, result, currentDate);
+                        } catch (ArithmeticException | IllegalArgumentException e) {
+                            out.println("Invalid operation for expression '" + request + "': " + e.getMessage());
+                        }
                     }
                 }
 
@@ -137,5 +151,54 @@ public class TCPServer {
                 e.printStackTrace();
             }
         }
+
+        /**
+         * Sends historical data to the client.
+         *
+         * @param out The PrintWriter for sending data to the client.
+         */
+        private void sendHistorialData(PrintWriter out) {
+            String csvFilePath = "C:\\Users\\joseb\\OneDrive\\Escritorio\\TEC\\II Semestre\\Datos I\\Proyectos\\#2\\Funcional\\src\\CSVFile\\RegistroOperaciones.csv";
+
+            DefaultTableModel tableModel = new DefaultTableModel();
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] data = line.split(",");
+                    if (tableModel.getColumnCount() == 0) {
+                        // Add table headers
+                        for (String header : data) {
+                            tableModel.addColumn(header);
+                        }
+                    } else {
+                        // Add data rows
+                        tableModel.addRow(data);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                out.println("Error reading historical data.");
+                return;
+            }
+
+            // Create a JTable to display the data
+            JTable table = new JTable(tableModel);
+            JScrollPane scrollPane = new JScrollPane(table);
+
+            // Create a JFrame to hold the table
+            JFrame frame = new JFrame("History of Operations");
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.add(scrollPane, BorderLayout.CENTER);
+
+            // Create a Close button
+            JButton closeButton = new JButton("Close");
+            closeButton.addActionListener(e -> frame.dispose());
+            frame.add(closeButton, BorderLayout.SOUTH);
+
+            frame.setPreferredSize(new Dimension(800, 400));
+            frame.pack();
+            frame.setVisible(true);
+        }    
     }
 }
