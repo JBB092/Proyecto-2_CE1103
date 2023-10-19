@@ -32,6 +32,38 @@ public class TCPServer {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected from: " + clientSocket.getInetAddress());
 
+                // Use a thread to handle each client connection
+                Thread clientThread = new Thread(new ClientHandler(clientSocket, dateFormat));
+                clientThread.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (serverSocket != null) {
+                    serverSocket.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Inner class to handle client connections in separate threads.
+     */
+    private static class ClientHandler implements Runnable {
+        private Socket clientSocket;
+        private SimpleDateFormat dateFormat;
+
+        public ClientHandler(Socket clientSocket, SimpleDateFormat dateFormat) {
+            this.clientSocket = clientSocket;
+            this.dateFormat = dateFormat;
+        }
+
+        @Override
+        public void run() {
+            try {
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
@@ -54,40 +86,32 @@ public class TCPServer {
                 }
 
                 clientSocket.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (serverSocket != null) {
-                    serverSocket.close();
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-    }
 
-    /**
-     * Normalizes the expression by adding spaces around operators.
-     *
-     * @param expression The input expression to normalize.
-     * @return The normalized expression with spaces around operators.
-     */
-    private static String normalizeExpression(String expression) {
-        return expression.replaceAll("(?<=\\d)(?=[+\\-*/()])|(?<=[+\\-*/()])(?=\\d)", " ");
-    }
+        /**
+         * Normalizes the expression by adding spaces around operators.
+         *
+         * @param expression The input expression to normalize.
+         * @return The normalized expression with spaces around operators.
+         */
+        private String normalizeExpression(String expression) {
+            return expression.replaceAll("(?<=\\d)(?=[+\\-*/()])|(?<=[+\\-*/()])(?=\\d)", " ");
+        }
 
-    /**
-     * Evaluates the given expression and returns the result.
-     *
-     * @param expression The expression to evaluate.
-     * @return The result of the evaluated expression.
-     */
-    private static int evaluateExpression(String expression) {
-        String postfix = InfixToPostfixAndEval.infixToPostfix(expression);
-        BinaryExpressionTree expressionTree = new BinaryExpressionTree();
-        expressionTree.buildTreeFromPostfix(postfix);
-        return expressionTree.evaluate();
+        /**
+         * Evaluates the given expression and returns the result.
+         *
+         * @param expression The expression to evaluate.
+         * @return The result of the evaluated expression.
+         */
+        private int evaluateExpression(String expression) {
+            String postfix = InfixToPostfixAndEval.infixToPostfix(expression);
+            BinaryExpressionTree expressionTree = new BinaryExpressionTree();
+            expressionTree.buildTreeFromPostfix(postfix);
+            return expressionTree.evaluate();
+        }
     }
 }
