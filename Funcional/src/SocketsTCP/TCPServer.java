@@ -6,6 +6,8 @@ import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import DataStructures.Hierarchical.BinaryExpressionTree;
@@ -160,7 +162,12 @@ public class TCPServer {
         private void sendHistorialData(PrintWriter out) {
             String csvFilePath = "C:\\Users\\joseb\\OneDrive\\Escritorio\\TEC\\II Semestre\\Datos I\\Proyectos\\#2\\Funcional\\src\\CSVFile\\RegistroOperaciones.csv";
 
-            DefaultTableModel tableModel = new DefaultTableModel();
+            DefaultTableModel tableModel = new DefaultTableModel(){
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                return false; // Make all cells non-editable
+            }
+            };
 
             try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
                 String line;
@@ -184,14 +191,22 @@ public class TCPServer {
 
             // Create a JTable to display the data
             JTable table = new JTable(tableModel);
+
+            // Create a cell renderer to center-align the data
+            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+            centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+            // Apply the center renderer to all columns
+            for (int i = 0; i < table.getColumnCount(); i++) {
+                table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+            }
+
             JScrollPane scrollPane = new JScrollPane(table);
 
-            // Create a JFrame to hold the table
             JFrame frame = new JFrame("History of Operations");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.add(scrollPane, BorderLayout.CENTER);
 
-            // Create a Close button
             JButton closeButton = new JButton("Close");
             closeButton.addActionListener(e -> frame.dispose());
             frame.add(closeButton, BorderLayout.SOUTH);
