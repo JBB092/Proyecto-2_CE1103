@@ -141,7 +141,8 @@ public class TCPServer {
          * @param currentDate The current date in "dd/MM/yyyy" format.
          */
         private void appendToCSVFile(String operation, int result, String currentDate) {
-            String csvFile = "C:\\Users\\joseb\\OneDrive\\Escritorio\\TEC\\II Semestre\\Datos I\\Proyectos\\#2\\Funcional\\src\\CSVFile\\RegistroOperaciones.csv";
+            String currentDirectory = System.getProperty("user.dir");
+            String csvFile = currentDirectory+"/src/CSVFile/RegistroOperaciones.csv";
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile, true))) {
                 // Create a new line with the data and write it to the file
@@ -160,7 +161,8 @@ public class TCPServer {
          * @param out The PrintWriter for sending data to the client.
          */
         private void sendHistorialData(PrintWriter out) {
-            String csvFilePath = "C:\\Users\\joseb\\OneDrive\\Escritorio\\TEC\\II Semestre\\Datos I\\Proyectos\\#2\\Funcional\\src\\CSVFile\\RegistroOperaciones.csv";
+            String currentDirectory = System.getProperty("user.dir");
+            String csvFilePath= currentDirectory+"/src/CSVFile/RegistroOperaciones.csv";
 
             DefaultTableModel tableModel = new DefaultTableModel(){
                 @Override
