@@ -22,7 +22,7 @@ public class TCPServer {
      */
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
         try {
             serverSocket = new ServerSocket(12345);

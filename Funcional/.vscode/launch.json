@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ReadCSVFile",
+            "request": "launch",
+            "mainClass": "CSVFile.Examples.ReadCSVFile",
+            "projectName": "Funcional_4d9e17bf"
+        },
+        {
+            "type": "java",
             "name": "InfixToPostfixAndEval",
             "request": "launch",
             "mainClass": "DataStructures.Hierarchical.InfixToPostfixAndEval",
