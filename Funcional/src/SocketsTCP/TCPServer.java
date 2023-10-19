@@ -80,6 +80,9 @@ public class TCPServer {
 
                         // Send the operation, result, and date to the client
                         out.println(expression + "," + result + "," + currentDate);
+
+                        // Append the data to the CSV file
+                        appendToCSVFile(expression, result, currentDate);
                     } catch (ArithmeticException | IllegalArgumentException e) {
                         out.println("Invalid operation for expression '" + expression + "': " + e.getMessage());
                     }
@@ -112,6 +115,27 @@ public class TCPServer {
             BinaryExpressionTree expressionTree = new BinaryExpressionTree();
             expressionTree.buildTreeFromPostfix(postfix);
             return expressionTree.evaluate();
+        }
+
+        /**
+         * Appends the operation, result, and date to a CSV file.
+         *
+         * @param operation The mathematical operation.
+         * @param result The result of the operation.
+         * @param currentDate The current date in "dd/MM/yyyy" format.
+         */
+        private void appendToCSVFile(String operation, int result, String currentDate) {
+            String csvFile = "C:\\Users\\joseb\\OneDrive\\Escritorio\\TEC\\II Semestre\\Datos I\\Proyectos\\#2\\Funcional\\src\\CSVFile\\RegistroOperaciones.csv";
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile, true))) {
+                // Create a new line with the data and write it to the file
+                String newLine = operation + "," + result + "," + currentDate;
+                writer.write(newLine);
+                writer.newLine(); // Add a line break
+                System.out.println("Data added to the CSV file.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
