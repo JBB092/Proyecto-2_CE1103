@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "WriteToCSVFile",
+            "request": "launch",
+            "mainClass": "CSVFile.Examples.WriteToCSVFile",
+            "projectName": "Funcional_4d9e17bf"
+        },
+        {
+            "type": "java",
             "name": "ReadCSVFile",
             "request": "launch",
             "mainClass": "CSVFile.Examples.ReadCSVFile",
