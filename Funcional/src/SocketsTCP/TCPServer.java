@@ -5,12 +5,12 @@ import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import DataStructures.NoHierarchical.StackTCP;
+import DataStructures.Hierarchical.BinaryExpressionTree;
+import DataStructures.Hierarchical.InfixToPostfixAndEval;
 
 /**
- * Represents a TCP server that evaluates mathematical expressions received from clients.
- *
- * This server listens for incoming client connections and handles evaluation of mathematical expressions.
+ * This class represents a TCP server that evaluates mathematical expressions received from clients.
+ * It listens for incoming client connections and handles the evaluation of mathematical expressions.
  *
  * @author José Barquero
  */
@@ -32,22 +32,18 @@ public class TCPServer {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected from: " + clientSocket.getInetAddress());
 
-                // Set up input and output streams
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                // Read operations until the client terminates the connection
                 String expression;
                 while ((expression = in.readLine()) != null) {
                     // Normalize the expression (add spaces around operators)
                     String normalizedExpression = normalizeExpression(expression);
 
-                    // Parse the expression and perform the operation
-                    double result;
+                    // Parse the expression and perform the operation using InfixToPostfixAndEval
+                    int result;
                     try {
                         result = evaluateExpression(normalizedExpression);
-
-                        // Get the current date
                         String currentDate = dateFormat.format(new Date());
 
                         // Send the operation, result, and date to the client
@@ -57,7 +53,6 @@ public class TCPServer {
                     }
                 }
 
-                // Close the connection with the client
                 clientSocket.close();
             }
         } catch (IOException e) {
@@ -89,82 +84,10 @@ public class TCPServer {
      * @param expression The expression to evaluate.
      * @return The result of the evaluated expression.
      */
-    private static double evaluateExpression(String expression) {
-        // Split the expression into operands and operators
-        String[] tokens = expression.split("\\s+");
-        StackTCP operandStack = new StackTCP();
-        StackTCP operatorStack = new StackTCP();
-
-        for (String token : tokens) {
-            if (token.matches("[0-9]+(\\.[0-9]+)?")) {
-                operandStack.push(token);
-            } else if (token.equals(")")) {
-                while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(")) {
-                    performOperation(operandStack, operatorStack);
-                }
-                operatorStack.pop(); // Remove the '('
-            } else if (token.matches("[+\\-*/]")) {
-                while (!operatorStack.isEmpty() && hasHigherOrEqualPrecedence(operatorStack.peek(), token)) {
-                    performOperation(operandStack, operatorStack);
-                }
-                operatorStack.push(token);
-            }
-        }
-
-        while (!operatorStack.isEmpty()) {
-            performOperation(operandStack, operatorStack);
-        }
-
-        return Double.parseDouble(operandStack.pop());
-    }
-
-    /**
-     * Checks if one operator has higher or equal precedence than another.
-     *
-     * @param op1 The first operator.
-     * @param op2 The second operator.
-     * @return True if op1 has higher or equal precedence, false otherwise.
-     */
-    private static boolean hasHigherOrEqualPrecedence(String op1, String op2) {
-        if ((op1.equals("*") || op1.equals("/")) && (op2.equals("+") || op2.equals("-"))) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Performs an operation using operands and operators from the stacks.
-     *
-     * @param operandStack The stack containing operands.
-     * @param operatorStack The stack containing operators.
-     */
-    private static void performOperation(StackTCP operandStack, StackTCP operatorStack) {
-        if (operandStack.isEmpty() || operatorStack.isEmpty()) {
-            throw new RuntimeException("Insufficient operands or operators for the operation.");
-        }
-
-        double operand2 = Double.parseDouble(operandStack.pop());
-        double operand1 = Double.parseDouble(operandStack.pop());
-        String operator = operatorStack.pop();
-
-        switch (operator) {
-            case "+":
-                operandStack.push((operand1 + operand2) + "");
-                break;
-            case "-":
-                operandStack.push((operand1 - operand2) + "");
-                break;
-            case "*":
-                operandStack.push((operand1 * operand2) + "");
-                break;
-            case "/":
-                if (operand2 == 0) {
-                    throw new ArithmeticException("Division by zero.");
-                }
-                operandStack.push((operand1 / operand2) + "");
-                break;
-            default:
-                throw new IllegalArgumentException("Unrecognized operator: " + operator);
-        }
+    private static int evaluateExpression(String expression) {
+        String postfix = InfixToPostfixAndEval.infixToPostfix(expression);
+        BinaryExpressionTree expressionTree = new BinaryExpressionTree();
+        expressionTree.buildTreeFromPostfix(postfix);
+        return expressionTree.evaluate();
     }
 }

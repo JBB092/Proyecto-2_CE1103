@@ -50,7 +50,7 @@ public class InfixToPostfixAndEval {
      * @param infix The input infix expression.
      * @return The postfix expression.
      */
-    static String infixToPostfix(String infix) {
+    public static String infixToPostfix(String infix) {
         Stack<Character> operatorStack = new Stack<>();
         StringBuilder postfixBuilder = new StringBuilder();
 
