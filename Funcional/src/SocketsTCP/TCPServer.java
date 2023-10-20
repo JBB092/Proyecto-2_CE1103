@@ -88,7 +88,7 @@ public class TCPServer {
                         String normalizedExpression = normalizeExpression(request);
 
                         // Parse the expression and perform the operation using InfixToPostfixAndEval
-                        int result;
+                        double result;
                         try {
                             result = evaluateExpression(normalizedExpression);
                             String currentDate = dateFormat.format(new Date());
@@ -117,6 +117,7 @@ public class TCPServer {
          * @return The normalized expression with spaces around operators.
          */
         private String normalizeExpression(String expression) {
+            expression=expression.replace("**", "^");
             return expression.replaceAll("(?<=\\d)(?=[+\\-*/()])|(?<=[+\\-*/()])(?=\\d)", " ");
         }
 
@@ -126,7 +127,7 @@ public class TCPServer {
          * @param expression The expression to evaluate.
          * @return The result of the evaluated expression.
          */
-        private int evaluateExpression(String expression) {
+        private double evaluateExpression(String expression) {
             String postfix = InfixToPostfixAndEval.infixToPostfix(expression);
             BinaryExpressionTree expressionTree = new BinaryExpressionTree();
             expressionTree.buildTreeFromPostfix(postfix);
@@ -140,7 +141,7 @@ public class TCPServer {
          * @param result The result of the operation.
          * @param currentDate The current date in "dd/MM/yyyy" format.
          */
-        private void appendToCSVFile(String operation, int result, String currentDate) {
+        private void appendToCSVFile(String operation, double result, String currentDate) {
             String currentDirectory = System.getProperty("user.dir");
             String csvFile = currentDirectory+"/src/CSVFile/RegistroOperaciones.csv";
 

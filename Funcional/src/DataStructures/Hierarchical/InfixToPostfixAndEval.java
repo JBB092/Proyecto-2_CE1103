@@ -20,7 +20,7 @@ public class InfixToPostfixAndEval {
      * @return True if the character is an operator, false otherwise.
      */
     static boolean isOperator(char c) {
-        return (c == '+' || c == '-' || c == '/' || c == '*' || c == '^');
+        return (c == '+' || c == '-' || c == '/' || c == '*' || c == '%' || c == '^');
     }
 
     /**
@@ -37,8 +37,10 @@ public class InfixToPostfixAndEval {
             case '*':
             case '/':
                 return 2;
-            case '^':
+            case '%':
                 return 3;
+            case '^':
+                return 4;
             default:
                 return -1;
         }
@@ -61,13 +63,19 @@ public class InfixToPostfixAndEval {
                 continue;
             }
 
-            if (!isOperator(c)) {
-                postfixBuilder.append(c);
+            if (c == '*' && i < infix.length() - 1 && infix.charAt(i + 1) == '*') {
+                // Replace "**" with "^" and continue
+                postfixBuilder.append('^');
+                i++; // Skip the next '*'
             } else {
-                while (!operatorStack.isEmpty() && getPrecedence(operatorStack.peek()) >= getPrecedence(c)) {
-                    postfixBuilder.append(operatorStack.pop());
+                if (!isOperator(c)) {
+                    postfixBuilder.append(c);
+                } else {
+                    while (!operatorStack.isEmpty() && getPrecedence(operatorStack.peek()) >= getPrecedence(c)) {
+                        postfixBuilder.append(operatorStack.pop());
+                    }
+                    operatorStack.push(c);
                 }
-                operatorStack.push(c);
             }
         }
 
@@ -84,15 +92,16 @@ public class InfixToPostfixAndEval {
      * @param args Command line arguments (not used in this program).
      */
     public static void main(String[] args) {
-        String infix = "9*9+2/2";
-        String postfix = infixToPostfix(infix);
+        String infix = "9**2";
         System.out.println("Infix: " + infix);
+        infix = infix.replace("**", "^");
+        String postfix = infixToPostfix(infix);
         System.out.println("Postfix: " + postfix);
 
         BinaryExpressionTree expressionTree = new BinaryExpressionTree();
         expressionTree.buildTreeFromPostfix(postfix);
 
-        int result = expressionTree.evaluate();
+        double result = expressionTree.evaluate();
         System.out.println("Result: " + result);
     }
 }
