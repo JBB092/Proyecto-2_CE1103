@@ -53,7 +53,7 @@ public class BinaryExpressionTree {
      *
      * @return The result of the expression evaluation.
      */
-    public int evaluate() {
+    public double evaluate() {
         return evaluate(root);
     }
 
@@ -63,17 +63,17 @@ public class BinaryExpressionTree {
      * @param node The node from which to start the evaluation.
      * @return The result of the evaluation.
      */
-    private int evaluate(BinaryTreeNode node) {
+    private double evaluate(BinaryTreeNode node) {
         if (node == null) {
-            return 0;
+            return 0.0;
         }
 
         if (isOperand(node.getData())) {
-            return Integer.parseInt(node.getData());
+            return Double.parseDouble(node.getData());
         }
 
-        int leftValue = evaluate(node.getLeft());
-        int rightValue = evaluate(node.getRight());
+        double leftValue = evaluate(node.getLeft());
+        double rightValue = evaluate(node.getRight());
 
         switch (node.getData()) {
             case "+":
@@ -82,11 +82,15 @@ public class BinaryExpressionTree {
                 return leftValue - rightValue;
             case "*":
                 return leftValue * rightValue;
+            case "%":
+                return (rightValue * leftValue) / 100;
             case "/":
                 if (rightValue == 0) {
                     throw new ArithmeticException("Division by zero.");
                 }
                 return leftValue / rightValue;
+            case "^":
+                return Math.pow(leftValue, rightValue);
             default:
                 throw new IllegalArgumentException("Invalid operator: " + node.getData());
         }
@@ -99,7 +103,7 @@ public class BinaryExpressionTree {
      * @return True if the token is an operand, false otherwise.
      */
     private boolean isOperand(String token) {
-        return token.matches("\\d+");
+        return token.matches("\\d+(\\.\\d+)?"); // Acepta números enteros o decimales
     }
 
     /**
@@ -109,6 +113,6 @@ public class BinaryExpressionTree {
      * @return True if the token is an operator, false otherwise.
      */
     private boolean isOperator(String token) {
-        return token.matches("[+\\-*/]");
+        return token.matches("[+\\-*/%^]");
     }
 }
