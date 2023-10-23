@@ -67,14 +67,14 @@ public class BinaryExpressionTree {
         if (node == null) {
             return 0.0;
         }
-    
+
         if (isOperand(node.getData())) {
             return Double.parseDouble(node.getData());
         }
-    
+
         double leftValue = evaluate(node.getLeft());
         double rightValue = evaluate(node.getRight());
-    
+
         switch (node.getData()) {
             case "+":
                 return leftValue + rightValue;
@@ -90,7 +90,7 @@ public class BinaryExpressionTree {
                 }
                 return leftValue / rightValue;
             case "^":
-                return Math.pow(leftValue, rightValue); // Operación de potencia
+                return Math.pow(leftValue, rightValue);
             default:
                 throw new IllegalArgumentException("Invalid operator: " + node.getData());
         }
@@ -103,7 +103,7 @@ public class BinaryExpressionTree {
      * @return True if the token is an operand, false otherwise.
      */
     private boolean isOperand(String token) {
-        return token.matches("\\d+(\\.\\d+)?");
+        return token.matches("\\d+(\\.\\d+)?"); // Acepta números enteros o decimales
     }
 
     /**

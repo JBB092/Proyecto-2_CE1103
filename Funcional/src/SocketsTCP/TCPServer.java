@@ -168,8 +168,8 @@ public class TCPServer {
             DefaultTableModel tableModel = new DefaultTableModel(){
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                return false; // Make all cells non-editable
-            }
+                    return false; // Make all cells non-editable
+                }
             };
 
             try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
@@ -217,6 +217,6 @@ public class TCPServer {
             frame.setPreferredSize(new Dimension(800, 400));
             frame.pack();
             frame.setVisible(true);
-        }    
+        }
     }
 }
