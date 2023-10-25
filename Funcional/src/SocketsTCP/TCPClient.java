@@ -5,7 +5,7 @@ import java.net.*;
 
 /**
  * Represents a TCP client that communicates with a server over a TCP connection.
- *
+ *<p>
  * This client allows the user to send mathematical expressions to the server for evaluation.
  * It also provides the ability to exit the client by entering 'exit'.
  *
