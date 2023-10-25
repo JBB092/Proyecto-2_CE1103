@@ -1,114 +1,78 @@
 package DataStructures.Hierarchical;
 
-import DataStructures.NoHierarchical.Stack;
+import java.util.Objects;
+
+import DataStructures.NoHierarchical.CustomQueue;
+import DataStructures.NoHierarchical.CustomStack;
 
 /**
- * Represents a Binary Expression Tree that can be used to evaluate expressions in postfix notation.
- *
- * This tree is constructed from a postfix expression and provides the ability to evaluate the expression.
+ * BinaryExpressionTree represents a binary expression tree for evaluating mathematical expressions.
+ * It provides methods to construct the tree from a postfix expression and perform in-order traversal.
  *
  * @author José Barquero
  */
 public class BinaryExpressionTree {
-    private BinaryTreeNode root;
 
     /**
-     * Constructs an empty Binary Expression Tree.
+     * Constructs a BinaryExpressionTree.
      */
-    public BinaryExpressionTree() {
-        this.root = null;
+    public BinaryExpressionTree(){
+
     }
 
     /**
-     * Builds a Binary Expression Tree from a postfix expression.
+     * Checks if the given token is an operator (+, -, *, /, or ^).
      *
-     * @param postfixExpression The postfix expression to build the tree from.
+     * @param c The token to check.
+     * @return True if the token is an operator; otherwise, false.
      */
-    public void buildTreeFromPostfix(String postfixExpression) {
-        Stack<BinaryTreeNode> stack = new Stack<>();
+    public boolean isOperator(String c) {
+        return Objects.equals(c, "+") || Objects.equals(c, "-") || Objects.equals(c, "*") || Objects.equals(c, "/") || Objects.equals(c, "^");
+    }
 
-        for (char c : postfixExpression.toCharArray()) {
-            String token = String.valueOf(c);
+    /**
+     * Constructs a binary expression tree from a postfix expression.
+     *
+     * @param postfix The postfix expression represented as a custom queue.
+     * @return The root node of the constructed binary expression tree.
+     */
+    public TreeNode construct(CustomQueue postfix)
+    {
+        // Base case
+        if (postfix == null) {
+            return null;
+        }
 
-            if (isOperand(token)) {
-                BinaryTreeNode node = new BinaryTreeNode(token);
-                stack.push(node);
-            } else if (isOperator(token)) {
-                BinaryTreeNode right = stack.pop();
-                BinaryTreeNode left = stack.pop();
+        // Create an empty stack to store tree node pointers
+        CustomStack<TreeNode> s = new CustomStack<>();
 
-                BinaryTreeNode operatorNode = new BinaryTreeNode(token);
-                operatorNode.setLeft(left);
-                operatorNode.setRight(right);
+        String c = "";
+        // Traverse the postfix expression
+        while (!postfix.getList().isEmpty())
+        {
+            // If the current token is an operator
+            c += postfix.dequeue();
+            if (isOperator(c))
+            {
+                // Pop two nodes 'x' and 'y' form the stack
+                TreeNode x = s.pop();
+                TreeNode y = s.pop();
 
-                stack.push(operatorNode);
+                // Build a new binary tree whose root is the operator and whose
+                // left and right children point to `y` and `x`, respectively
+                TreeNode treeNode = new TreeNode(c, y, x);
+
+                // Push the current node into the stack
+                s.push(treeNode);
             }
+            // If the current token is an operand, create a new binary tree node
+            // whose root is the operand and push it onto the stac
+            else {
+                s.push(new TreeNode(c));
+            }
+            c="";
         }
-
-        this.root = stack.pop();
-    }
-
-    /**
-     * Evaluates the expression stored in the Binary Expression Tree.
-     *
-     * @return The result of the expression evaluation.
-     */
-    public int evaluate() {
-        return evaluate(root);
-    }
-
-    /**
-     * Recursively evaluates the expression starting from the given node.
-     *
-     * @param node The node from which to start the evaluation.
-     * @return The result of the evaluation.
-     */
-    private int evaluate(BinaryTreeNode node) {
-        if (node == null) {
-            return 0;
-        }
-
-        if (isOperand(node.getData())) {
-            return Integer.parseInt(node.getData());
-        }
-
-        int leftValue = evaluate(node.getLeft());
-        int rightValue = evaluate(node.getRight());
-
-        switch (node.getData()) {
-            case "+":
-                return leftValue + rightValue;
-            case "-":
-                return leftValue - rightValue;
-            case "*":
-                return leftValue * rightValue;
-            case "/":
-                if (rightValue == 0) {
-                    throw new ArithmeticException("Division by zero.");
-                }
-                return leftValue / rightValue;
-            default:
-                throw new IllegalArgumentException("Invalid operator: " + node.getData());
-        }
-    }
-
-    /**
-     * Checks if a given token is an operand.
-     *
-     * @param token The token to check.
-     * @return True if the token is an operand, false otherwise.
-     */
-    private boolean isOperand(String token) {
-        return token.matches("\\d+");
-    }
-
-    /**
-     * Checks if a given token is an operator.
-     *
-     * @param token The token to check.
-     * @return True if the token is an operator, false otherwise.
-     */
-    private boolean isOperator(String token) {
-        return token.matches("[+\\-*/]");
+        // A pointer to the root of the expression tree remains in the stack
+        return s.peek();
     }
 }
