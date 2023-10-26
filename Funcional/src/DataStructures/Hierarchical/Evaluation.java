@@ -41,8 +41,11 @@ public class Evaluation {
                 }
                 yield leftValue / rightValue;
             }
+            case "%" -> (leftValue*rightValue)/100;
             case "^" -> Math.pow(leftValue, rightValue);
             case "&" -> (float) ((int) leftValue & (int) rightValue);
+            case "|" -> (float) ((int) leftValue | (int) rightValue);
+            case "?" -> (float) ((int) leftValue ^ (int) rightValue);
             default -> throw new IllegalArgumentException("Invalid operator: " + root.valor);
         };
     }

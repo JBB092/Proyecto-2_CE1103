@@ -100,6 +100,7 @@ public class TCPServer {
              */
             private void evaluateExpression(String expression, PrintWriter out) {
                 try {
+                    String originalExpression = expression;
                     String currentDate = dateFormat.format(new Date());
 
                     InfixToPostfix convert = new InfixToPostfix();
@@ -112,20 +113,30 @@ public class TCPServer {
                         out.println("Error: Operación inválida");
                     } else if (analyzed.equals("v")) {
                         expression = expression.replace("**","^");
+                        CustomQueue postfix = convert.convertPQ(expression);
+                        TreeNode expPost = tree.construct(postfix);
+
+                        double result = Evaluation.evaluateExpressionTree(tree, expPost);
+
+                        // Send the operation, result, and date to the client
+                        out.println(expression + "," + result + "," + currentDate);
+
+                        // Append the data to the CSV file
+                        appendToCSVFile(originalExpression, result, currentDate);
                     } else {
                         expression = expression.replace("^","?");
+                        CustomQueue postfix = convert.convertPQ(expression);
+                        TreeNode expPost = tree.construct(postfix);
+
+                        double result = Evaluation.evaluateExpressionTree(tree, expPost);
+
+                        // Send the operation, result, and date to the client
+                        out.println(expression + "," + result + "," + currentDate);
+
+                        // Append the data to the CSV file
+                        appendToCSVFile(originalExpression, result, currentDate);
                     }
 
-                    CustomQueue postfix = convert.convertPQ(expression);
-                    TreeNode expPost = tree.construct(postfix);
-
-                    double result = Evaluation.evaluateExpressionTree(tree, expPost);
-
-                    // Send the operation, result, and date to the client
-                    out.println(expression + "," + result + "," + currentDate);
-
-                    // Append the data to the CSV file
-                    appendToCSVFile(expression, result, currentDate);
                 } catch (ArithmeticException | IllegalArgumentException e) {
                     out.println("Invalid operation for expression '" + expression + "': " + e.getMessage());
                 }
