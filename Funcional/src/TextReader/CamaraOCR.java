@@ -1,5 +1,6 @@
 package TextReader;
 
+import javafx.scene.image.Image;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
@@ -73,5 +74,16 @@ public class CamaraOCR {
         // Release the camera and close the display window
         camera.release();
         HighGui.destroyAllWindows();
+    }
+
+    public Image captureImage() {
+        return null;
+    }
+
+    public void closeCamera() {
+    }
+
+    public Image getCapturedImage() {
+        return null;
     }
 }
