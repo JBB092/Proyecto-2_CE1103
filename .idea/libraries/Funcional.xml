@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Funcional">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Funcional/tess4j-3.4.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Funcional/opencv-480.jar!/" />
+      <root url="file://$PROJECT_DIR$/../Bibliotecas/javafx-sdk-21.0.1/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../Bibliotecas/javafx-sdk-21.0.1/lib" recursive="false" />
+  </library>
+</component>
