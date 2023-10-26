@@ -66,13 +66,13 @@ public class InfixToPostfix {
     }
 
     /**
-     * Checks if a character is an operator (+, -, *, /, %, ^, &, |, ?).
+     * Checks if a character is an operator (+, -, *, /, %, ^, &, |, ?, ~).
      *
      * @param c The character to check.
      * @return True if the character is an operator, false otherwise.
      */
     public boolean isOperator(Character c){
-        if (c=='+' || c=='-' || c=='*' || c=='/' ||c=='%' || c=='^' || c=='&' || c=='|' || c=='?'){
+        if (c=='+' || c=='-' || c=='*' || c=='/' ||c=='%' || c=='^' || c=='&' || c=='|' || c=='?' || c=='~'){
             return true;
         }
         else{
@@ -87,7 +87,7 @@ public class InfixToPostfix {
      * @return True if the character is an operand, false otherwise.
      */
     public boolean isOperand(Character c){
-        if (c=='+' || c=='-' || c=='*' || c=='/' || c=='%' || c=='^' || c=='(' || c==')' || c=='&' || c=='|' || c=='?'){
+        if (c=='+' || c=='-' || c=='*' || c=='/' || c=='%' || c=='^' || c=='(' || c==')' || c=='&' || c=='|' || c=='?' || c=='~'){
             return false;
         }
         else{
@@ -103,7 +103,7 @@ public class InfixToPostfix {
      */
     private int priorityInExpression (char operator)
     {
-        if (operator == '^' || operator == '&')
+        if (operator == '^' || operator=='~' || operator == '&')
         {
             return 4;
         }

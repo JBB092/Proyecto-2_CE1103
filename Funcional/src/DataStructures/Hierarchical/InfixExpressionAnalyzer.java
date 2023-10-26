@@ -27,7 +27,6 @@ public class InfixExpressionAnalyzer {
         String logic = "f";
         String mix ="";
 
-        // Operadores aritméticos y lógicos
         String arithmeticOperators = "+-*/%";
         String logicalOperators = "&|^~";
 

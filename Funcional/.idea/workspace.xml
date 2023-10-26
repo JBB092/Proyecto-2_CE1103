@@ -96,7 +96,7 @@
       <workItem from="1698040238768" duration="1079000" />
       <workItem from="1698068157989" duration="5593000" />
       <workItem from="1698250380474" duration="24095000" />
-      <workItem from="1698283516309" duration="9191000" />
+      <workItem from="1698283516309" duration="14235000" />
     </task>
     <servers />
   </component>
@@ -110,11 +110,6 @@
           <properties class="java.util.EmptyStackException" package="java.util" />
           <option name="timeStamp" value="1" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/DataStructures/Hierarchical/TreeNode.java</url>
-          <line>45</line>
-          <option name="timeStamp" value="47" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
