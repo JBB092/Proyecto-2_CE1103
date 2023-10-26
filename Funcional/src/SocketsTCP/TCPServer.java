@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import DataStructures.Hierarchical.InfixToPostfix;
 import DataStructures.Hierarchical.BinaryExpressionTree;
+import DataStructures.Hierarchical.InfixExpressionAnalyzer;
 import DataStructures.NoHierarchical.CustomQueue;
 import DataStructures.Hierarchical.TreeNode;
 import DataStructures.Hierarchical.Evaluation;
@@ -103,6 +104,17 @@ public class TCPServer {
 
                     InfixToPostfix convert = new InfixToPostfix();
                     BinaryExpressionTree tree = new BinaryExpressionTree();
+                    InfixExpressionAnalyzer test = new InfixExpressionAnalyzer();
+
+                    String analyzed = test.analyzeInfixExpression(expression);
+
+                    if (analyzed.equals("Mixta")){
+                        out.println("Error: Operación inválida");
+                    } else if (analyzed.equals("v")) {
+                        expression = expression.replace("**","^");
+                    } else {
+                        expression = expression.replace("^","?");
+                    }
 
                     CustomQueue postfix = convert.convertPQ(expression);
                     TreeNode expPost = tree.construct(postfix);

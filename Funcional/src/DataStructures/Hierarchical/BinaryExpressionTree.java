@@ -21,13 +21,13 @@ public class BinaryExpressionTree {
     }
 
     /**
-     * Checks if the given token is an operator (+, -, *, /, or ^).
+     * Checks if the given token is an operator (+, -, *, /, ^, &).
      *
      * @param c The token to check.
      * @return True if the token is an operator; otherwise, false.
      */
     public boolean isOperator(String c) {
-        return Objects.equals(c, "+") || Objects.equals(c, "-") || Objects.equals(c, "*") || Objects.equals(c, "/") || Objects.equals(c, "^");
+        return Objects.equals(c, "+") || Objects.equals(c, "-") || Objects.equals(c, "*") || Objects.equals(c, "/") || Objects.equals(c, "^") || Objects.equals(c, "&");
     }
 
     /**
