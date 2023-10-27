@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Funcional">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Funcional/opencv-480.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Funcional/tess4j-3.4.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
