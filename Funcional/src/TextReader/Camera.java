@@ -72,7 +72,7 @@ public class Camera extends JFrame {
             capture.read(image);
 
             final MatOfByte buf = new MatOfByte();
-            Imgcodecs.imencode(".jpg",image,buf);
+            Imgcodecs.imencode(".png",image,buf);
 
             imageData = buf.toArray();
 
@@ -80,7 +80,7 @@ public class Camera extends JFrame {
             cameraScreen.setIcon(icon);
 
             if(clicked){
-                String outputPath = "src/TextReader/Operations/operation.jpg";
+                String outputPath = "src/TextReader/Operations/operation.png";
                 Imgcodecs.imwrite(outputPath, image);
 
                 clicked=false;

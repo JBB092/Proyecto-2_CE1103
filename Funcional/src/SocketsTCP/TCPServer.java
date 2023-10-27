@@ -17,6 +17,9 @@ import DataStructures.NoHierarchical.CustomQueue;
 import DataStructures.Hierarchical.TreeNode;
 import DataStructures.Hierarchical.Evaluation;
 
+import TextReader.Camera;
+import org.opencv.core.Core;
+
 /**
  * This class represents a TCP server that evaluates mathematical expressions received from clients.
  * It listens for incoming client connections and handles the evaluation of mathematical expressions.
@@ -81,7 +84,10 @@ public class TCPServer {
                     while ((request = in.readLine()) != null) {
                         if (request.equalsIgnoreCase("Historial") || request.equalsIgnoreCase("historial")) {
                             sendHistorialData(out);
-                        } else {
+                        } else if (request.equalsIgnoreCase("Camara") || request.equalsIgnoreCase("camara")){
+                            continue;
+                        }
+                        else {
                             evaluateExpression(request, out);
                         }
                     }
