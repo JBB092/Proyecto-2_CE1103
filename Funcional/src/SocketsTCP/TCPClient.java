@@ -5,7 +5,15 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import javax.swing.*;
+import TextReader.Camera;
 
+/**
+ * This class represents a simple TCP client application with a graphical user interface. It allows the user
+ * to interact with a server using a chat-like interface and control a camera.
+ *
+ * @author José Barquero
+ * @author Diego Elizondo
+ */
 public class TCPClient extends JFrame {
     private JButton btnCamera;
     private JButton btnSend;
@@ -15,7 +23,12 @@ public class TCPClient extends JFrame {
     private JTextField txtField;
     private PrintWriter out;
     private BufferedReader in;
+    private Camera camera;
+    private int n;
 
+    /**
+     * Creates an instance of the TCPClient application.
+     */
     public TCPClient() {
         // GUI components
         setTitle("TCP Client");
@@ -66,6 +79,18 @@ public class TCPClient extends JFrame {
             }
         });
 
+        btnCamera.addActionListener(new ActionListener() {
+            final boolean run=true;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //if (camera==null){
+                    camera = new Camera();
+                    camera.runCamera(run);
+                    sendTess();
+                //}
+            }
+        });
+
         // Set up the server connection
         try {
             String serverAddress = "localhost"; // Change to the server's IP address if different
@@ -93,6 +118,11 @@ public class TCPClient extends JFrame {
         messageListener.start();
     }
 
+    /**
+     * Appends a message to the text area.
+     *
+     * @param message The message to append.
+     */
     private void appendToTextArea(String message) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -102,6 +132,9 @@ public class TCPClient extends JFrame {
         });
     }
 
+    /**
+     * Sends a message to the server.
+     */
     private void sendMessage() {
         String message = txtField.getText();
         if (!message.isEmpty()) {
@@ -110,10 +143,25 @@ public class TCPClient extends JFrame {
         }
     }
 
+    /**
+     * Sends a request for operations history to the server.
+     */
     private void sendHistoryRequest() {
         out.println("historial");
     }
 
+    /**
+     * Sends an operation message to the server.
+     */
+    private void sendTess(){
+        out.println("tess");
+    }
+
+    /**
+     * The entry point of the application.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             @Override
