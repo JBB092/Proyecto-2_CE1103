@@ -7,7 +7,7 @@ import java.io.File;
 public class ImageTextExtractor {
     public static void main(String[] args) {
         // Ruta de la imagen que deseas procesar
-        String imagePath = "C:/Users/joseb/OneDrive/Escritorio/TEC/II Semestre/Datos I/Proyectos/#2/IntelliJ/Funcional/src/TextReader/Operations/operation.jpg";
+        String imagePath = "C:/Users/joseb/OneDrive/Escritorio/TEC/II Semestre/Datos I/Proyectos/#2/IntelliJ/Funcional/src/TextReader/Operations/operation.png";
 
         // Configura Tesseract
         ITesseract tesseract = new Tesseract();

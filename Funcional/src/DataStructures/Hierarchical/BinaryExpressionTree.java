@@ -66,7 +66,7 @@ public class BinaryExpressionTree {
                 s.push(treeNode);
             }
             // If the current token is an operand, create a new binary tree node
-            // whose root is the operand and push it onto the stac
+            // whose root is the operand and push it onto the stack
             else {
                 s.push(new TreeNode(c));
             }
