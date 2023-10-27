@@ -17,6 +17,8 @@ import DataStructures.NoHierarchical.CustomQueue;
 import DataStructures.Hierarchical.TreeNode;
 import DataStructures.Hierarchical.Evaluation;
 
+import TextReader.ImageTextExtractor;
+
 /**
  * This class represents a TCP server that evaluates mathematical expressions received from clients.
  * It listens for incoming client connections and handles the evaluation of mathematical expressions.
@@ -79,10 +81,10 @@ public class TCPServer {
 
                     String request;
                     while ((request = in.readLine()) != null) {
-                        if (request.equalsIgnoreCase("Historial") || request.equalsIgnoreCase("historial")) {
+                        if (request.equalsIgnoreCase("historial")) {
                             sendHistorialData(out);
-                        } else if (request.equalsIgnoreCase("Camara") || request.equalsIgnoreCase("camara")){
-                            continue;
+                        } else if (request.equalsIgnoreCase("tess")){
+                            getTesseract(out);
                         }
                         else {
                             evaluateExpression(request, out);
@@ -122,7 +124,7 @@ public class TCPServer {
                         double result = Evaluation.evaluateExpressionTree(tree, expPost);
 
                         // Send the operation, result, and date to the client
-                        out.println(expression + "," + result + "," + currentDate);
+                        out.println("Operation: " + originalExpression + "; " + " Result: " + result);
 
                         // Append the data to the CSV file
                         appendToCSVFile(originalExpression, result, currentDate);
@@ -134,7 +136,7 @@ public class TCPServer {
                         double result = Evaluation.evaluateExpressionTree(tree, expPost);
 
                         // Send the operation, result, and date to the client
-                        out.println(expression + "," + result + "," + currentDate);
+                        out.println("Operation: " + originalExpression + "; " + " Result: " + result);
 
                         // Append the data to the CSV file
                         appendToCSVFile(originalExpression, result, currentDate);
@@ -228,6 +230,11 @@ public class TCPServer {
                 frame.setPreferredSize(new Dimension(800, 400));
                 frame.pack();
                 frame.setVisible(true);
+            }
+
+            private void getTesseract(PrintWriter out){
+                String result = ImageTextExtractor.readText();
+                evaluateExpression(result,out);
             }
         }
 }

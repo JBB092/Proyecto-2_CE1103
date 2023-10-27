@@ -46,7 +46,7 @@ public class Evaluation {
             case "&" -> (float) ((int) leftValue & (int) rightValue);
             case "|" -> (float) ((int) leftValue | (int) rightValue);
             case "?" -> (float) ((int) leftValue ^ (int) rightValue);
-            case "~" -> (float) (~(int) leftValue);
+            case "~" -> (float) (~(int) rightValue);
             default -> throw new IllegalArgumentException("Invalid operator: " + root.valor);
         };
     }

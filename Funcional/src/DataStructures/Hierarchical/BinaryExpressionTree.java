@@ -54,9 +54,12 @@ public class BinaryExpressionTree {
             c += postfix.dequeue();
             if (isOperator(c))
             {
+                TreeNode y = new TreeNode("0");
                 // Pop two nodes 'x' and 'y' form the stack
                 TreeNode x = s.pop();
-                TreeNode y = s.pop();
+                if (!c.equals("~")){
+                    y=s.pop();
+                }
 
                 // Build a new binary tree whose root is the operator and whose
                 // left and right children point to `y` and `x`, respectively
