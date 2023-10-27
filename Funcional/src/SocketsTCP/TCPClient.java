@@ -1,71 +1,124 @@
 package SocketsTCP;
 
-import TextReader.Camera;
-import org.opencv.core.Core;
-
 import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import javax.swing.*;
 
-/**
- * Represents a TCP client that communicates with a server over a TCP connection.
- *<p>
- * This client allows the user to send mathematical expressions to the server for evaluation.
- * It also provides the ability to exit the client by entering 'exit'.
- *
- * @author José Barquero
- */
-public class TCPClient {
-    /**
-     * The main method to start the TCP client.
-     *
-     * @param args The command-line arguments (not used in this application).
-     */
-    public static void main(String[] args) {
-        String serverAddress = "localhost"; // Change this to the server's IP address if different
-        int serverPort = 12345;
+public class TCPClient extends JFrame {
+    private JButton btnCamera;
+    private JButton btnSend;
+    private JButton btnHistory;
+    private JScrollPane txtAreaScrollPane;
+    private JTextArea txtArea;
+    private JTextField txtField;
+    private PrintWriter out;
+    private BufferedReader in;
 
-        try (Socket socket = new Socket(serverAddress, serverPort);
-             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
-             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+    public TCPClient() {
+        // GUI components
+        setTitle("TCP Client");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(667, 400);
+        setLayout(null);
 
-            while (true) {
-                System.out.print("Enter the mathematical expression (or 'exit' to quit): ");
-                String expression = userInput.readLine();
+        btnCamera = new JButton("Camera");
+        btnSend = new JButton("Send");
+        btnHistory = new JButton("History");
+        txtArea = new JTextArea(5, 5);
+        txtArea.setEditable(false);
+        txtArea.setWrapStyleWord(true);
+        txtArea.setLineWrap(true);
+        txtArea.setOpaque(false);
+        txtArea.setFocusable(false);
+        txtArea.setMargin(new Insets(10, 10, 10, 10));
+        txtArea.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+        txtArea.setAlignmentY(JTextArea.CENTER_ALIGNMENT);
+        txtArea.setFont(new Font("Sans-serif", Font.PLAIN, 14));
+        txtAreaScrollPane = new JScrollPane(txtArea);
+        txtField = new JTextField(5);
 
-                // Send the expression to the server
-                out.println(expression);
+        // Component bounds
+        btnCamera.setBounds(30, 295, 120, 50);
+        btnSend.setBounds(270, 295, 120, 50);
+        btnHistory.setBounds(510, 295, 120, 50);
+        txtAreaScrollPane.setBounds(10, 10, 640, 220);
+        txtField.setBounds(235, 250, 195, 25);
 
-                // If the client wants to exit, close the connection
-                if (expression.equalsIgnoreCase("exit")) {
-                    break;
-                } else if (expression.equalsIgnoreCase("Camara") || expression.equalsIgnoreCase("camara")){
-                    displayCamera(out);
-                }
-                // Read and display the server's response
-                String response = in.readLine();
-                System.out.println("Server response: " + response);
+        // Add components to the frame
+        add(btnCamera);
+        add(btnSend);
+        add(btnHistory);
+        add(txtAreaScrollPane);
+        add(txtField);
+
+        // Action listeners
+        btnSend.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                sendMessage();
             }
+        });
 
+        btnHistory.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                sendHistoryRequest();
+            }
+        });
+
+        // Set up the server connection
+        try {
+            String serverAddress = "localhost"; // Change to the server's IP address if different
+            int serverPort = 12345;
+            Socket socket = new Socket(serverAddress, serverPort);
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Thread messageListener = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String message;
+                    while (in != null && (message = in.readLine()) != null) {
+                        appendToTextArea(message);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        messageListener.start();
     }
 
-    private static void displayCamera(PrintWriter out){
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    private void appendToTextArea(String message) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                txtArea.append(message + "\n"); // Agregar el mensaje al txtArea
+            }
+        });
+    }
+
+    private void sendMessage() {
+        String message = txtField.getText();
+        if (!message.isEmpty()) {
+            out.println(message);
+            txtField.setText(""); // Clear the input field
+        }
+    }
+
+    private void sendHistoryRequest() {
+        out.println("historial");
+    }
+
+    public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Camera camera = new Camera();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        camera.startCamera();
-                    }
-                }).start();
+                new TCPClient().setVisible(true);
             }
         });
     }
