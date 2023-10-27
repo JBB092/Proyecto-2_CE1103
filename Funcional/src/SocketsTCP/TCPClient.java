@@ -1,5 +1,9 @@
 package SocketsTCP;
 
+import TextReader.Camera;
+import org.opencv.core.Core;
+
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 
@@ -36,8 +40,9 @@ public class TCPClient {
                 // If the client wants to exit, close the connection
                 if (expression.equalsIgnoreCase("exit")) {
                     break;
+                } else if (expression.equalsIgnoreCase("Camara") || expression.equalsIgnoreCase("camara")){
+                    displayCamera(out);
                 }
-
                 // Read and display the server's response
                 String response = in.readLine();
                 System.out.println("Server response: " + response);
@@ -46,5 +51,22 @@ public class TCPClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void displayCamera(PrintWriter out){
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Camera camera = new Camera();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        camera.startCamera();
+                    }
+                }).start();
+            }
+        });
     }
 }

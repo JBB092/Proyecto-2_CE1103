@@ -21,13 +21,13 @@ public class BinaryExpressionTree {
     }
 
     /**
-     * Checks if the given token is an operator (+, -, *, /, or ^).
+     * Checks if the given token is an operator (+, -, *, /, ^, %, &, |, ?, ~).
      *
      * @param c The token to check.
      * @return True if the token is an operator; otherwise, false.
      */
     public boolean isOperator(String c) {
-        return Objects.equals(c, "+") || Objects.equals(c, "-") || Objects.equals(c, "*") || Objects.equals(c, "/") || Objects.equals(c, "^");
+        return Objects.equals(c, "+") || Objects.equals(c, "-") || Objects.equals(c, "*") || Objects.equals(c, "/") || Objects.equals(c, "%") || Objects.equals(c, "^") || Objects.equals(c, "&") || Objects.equals(c, "|") || Objects.equals(c, "?") || Objects.equals(c, "~");
     }
 
     /**
@@ -66,7 +66,7 @@ public class BinaryExpressionTree {
                 s.push(treeNode);
             }
             // If the current token is an operand, create a new binary tree node
-            // whose root is the operand and push it onto the stac
+            // whose root is the operand and push it onto the stack
             else {
                 s.push(new TreeNode(c));
             }

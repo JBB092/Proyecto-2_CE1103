@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import DataStructures.Hierarchical.InfixToPostfix;
 import DataStructures.Hierarchical.BinaryExpressionTree;
+import DataStructures.Hierarchical.InfixExpressionAnalyzer;
 import DataStructures.NoHierarchical.CustomQueue;
 import DataStructures.Hierarchical.TreeNode;
 import DataStructures.Hierarchical.Evaluation;
@@ -80,7 +81,10 @@ public class TCPServer {
                     while ((request = in.readLine()) != null) {
                         if (request.equalsIgnoreCase("Historial") || request.equalsIgnoreCase("historial")) {
                             sendHistorialData(out);
-                        } else {
+                        } else if (request.equalsIgnoreCase("Camara") || request.equalsIgnoreCase("camara")){
+                            continue;
+                        }
+                        else {
                             evaluateExpression(request, out);
                         }
                     }
@@ -99,21 +103,43 @@ public class TCPServer {
              */
             private void evaluateExpression(String expression, PrintWriter out) {
                 try {
+                    String originalExpression = expression;
                     String currentDate = dateFormat.format(new Date());
 
                     InfixToPostfix convert = new InfixToPostfix();
                     BinaryExpressionTree tree = new BinaryExpressionTree();
+                    InfixExpressionAnalyzer test = new InfixExpressionAnalyzer();
 
-                    CustomQueue postfix = convert.convertPQ(expression);
-                    TreeNode expPost = tree.construct(postfix);
+                    String analyzed = test.analyzeInfixExpression(expression);
 
-                    double result = Evaluation.evaluateExpressionTree(tree, expPost);
+                    if (analyzed.equals("Mixta")){
+                        out.println("Error: Operación inválida");
+                    } else if (analyzed.equals("v")) {
+                        expression = expression.replace("**","^");
+                        CustomQueue postfix = convert.convertPQ(expression);
+                        TreeNode expPost = tree.construct(postfix);
 
-                    // Send the operation, result, and date to the client
-                    out.println(expression + "," + result + "," + currentDate);
+                        double result = Evaluation.evaluateExpressionTree(tree, expPost);
 
-                    // Append the data to the CSV file
-                    appendToCSVFile(expression, result, currentDate);
+                        // Send the operation, result, and date to the client
+                        out.println(expression + "," + result + "," + currentDate);
+
+                        // Append the data to the CSV file
+                        appendToCSVFile(originalExpression, result, currentDate);
+                    } else {
+                        expression = expression.replace("^","?");
+                        CustomQueue postfix = convert.convertPQ(expression);
+                        TreeNode expPost = tree.construct(postfix);
+
+                        double result = Evaluation.evaluateExpressionTree(tree, expPost);
+
+                        // Send the operation, result, and date to the client
+                        out.println(expression + "," + result + "," + currentDate);
+
+                        // Append the data to the CSV file
+                        appendToCSVFile(originalExpression, result, currentDate);
+                    }
+
                 } catch (ArithmeticException | IllegalArgumentException e) {
                     out.println("Invalid operation for expression '" + expression + "': " + e.getMessage());
                 }
