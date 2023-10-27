@@ -95,6 +95,7 @@ public class TCPClient extends JFrame {
             Socket socket = new Socket(serverAddress, serverPort);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            System.out.println(socket.getPort());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -168,3 +169,4 @@ public class TCPClient extends JFrame {
         });
     }
 }
+

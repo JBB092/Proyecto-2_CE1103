@@ -44,7 +44,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.uml",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -102,7 +102,8 @@
       <workItem from="1698355208859" duration="3192000" />
       <workItem from="1698368879071" duration="267000" />
       <workItem from="1698370125393" duration="28103000" />
-      <workItem from="1698405785656" duration="291000" />
+      <workItem from="1698405785656" duration="499000" />
+      <workItem from="1698406303055" duration="2800000" />
     </task>
     <servers />
   </component>

@@ -42,6 +42,7 @@ public class TCPServer {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected from: " + clientSocket.getInetAddress());
+                System.out.println(clientSocket.getPort());
 
                 // Use a thread to handle each client connection
                 Thread clientThread = new Thread(new ClientHandler(clientSocket, dateFormat));
