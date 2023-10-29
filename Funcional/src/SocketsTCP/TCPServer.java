@@ -177,7 +177,7 @@ public class TCPServer {
              */
             private void sendHistorialData(PrintWriter out) {
                 String currentDirectory = System.getProperty("user.dir");
-                String csvFilePath = currentDirectory + "/src/CSVFile/RegistroOperaciones.csv";
+                String csvFilePath = "C:/Users/joseb/OneDrive/Documentos/GitHub/Proyecto-2_CE1103/Funcional/src/CSVFile/RegistroOperaciones.csv";
 
                 DefaultTableModel tableModel = new DefaultTableModel() {
                     @Override
